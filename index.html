@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <style type="text/css">
+        .item {
+            width: 150px;
+            height: 150px;
+            background-size:100% 100%;
+            background-repeat: no-repeat;
+            margin-top: 20px;
+            margin-left: 20px;
+            transition: 1s;
+        }
+        .row {
+            margin-top: 100px;
+            display: flex;
+            flex-wrap: wrap;
+            height: 200px;
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .active {
+            border: 1px solid #fff;
+            box-shadow:0 0 20px #555;
+            
+        }
+        .background {
+            background-image: url(background.jpg);
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        .timer {
+            background-image: url(timer.png);
+            padding: 40px 20px;
+            width: 200px;
+            background-size: 100% 100%;
+            margin-left: 800px;
+        }
+        .time {
+            text-align: center;
+            color: #ebe3ca;
+            margin: 0;
+        }
+        .time1 {
+            text-align: center;
+            color: #ebe3ca;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="background">
+    <div class="timer">
+        <h1 class="time1"> 0:0
+            <span class="time">5</span>
+        </h1>
+    </div>
+    <div class="row">
+    </div>
+
+    <script type="text/javascript">
+    //див-родитель
+    let row = document.querySelector(".row");
+    let pastItem = null;
+    let timer = document.querySelector(".time")
+    let time = 5
+    let score = 0
+    let o = setInterval(minus, 1000);
+
+    //хранение картинок
+    let images = ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "1.png", "2.png", "3.png", "4.png", "5.png", "6.png"];
+
+    function getRandom(num){
+        let rand = Math.random() * num;
+        let round = Math.round(rand);
+        return round;
+    }
+
+    for (let i=0; i<12; i=i+1){
+        let elem = document.createElement("div");
+        row.appendChild(elem);
+        let getran = getRandom(images.length - 1);
+        elem.classList.add("item");
+
+        elem.style.backgroundImage = "url(" + images[getran] + ")";
+        elem.me = images[getran];
+
+        images.splice(getran, 1);
+
+        elem.onclick = function() {
+            elem.classList.add("active");
+
+            if (pastItem == null) {
+                pastItem = elem;
+            }
+            else if (pastItem.me == elem.me) {
+                pastItem.style.opacity = 0;
+                elem.style.opacity = 0;
+                pastItem = null;
+                score = score + 1;
+                if (score == 6) {
+                    clearInterval(o);
+                    alert("Победа!");
+                }
+            }
+            else if (pastItem.me != elem.me) {
+                pastItem.classList.remove("active");
+                elem.classList.remove("active");
+                pastItem = null;
+            }
+        }
+    }
+
+    let item = document.querySelectorAll(".item");
+
+    
+
+    function minus() {
+        time = time - 1;
+        timer.innerHTML = time;
+        if (time <= 0) {
+            clearInterval(o)
+            alert("Вы проиграли!");
+            for(let i = 0; i < 12; i = i + 1){
+                item[i].style.display = "none";
+            }
+        }
+    }
+    </script>
+</body>
+</html>
